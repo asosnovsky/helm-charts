@@ -20,10 +20,10 @@ spec:
         type: Recreate
     restartPolicy: Always
     template:
+        metadata:
+            labels:
+                {{ $labels | toYaml | nindent 16 }}
         spec:
-            metadata:
-                labels:
-                    {{ $labels | toYaml | nindent 26 }}
             containers:
                 -   name: main
                     env:
