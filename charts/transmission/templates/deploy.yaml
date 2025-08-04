@@ -36,6 +36,8 @@ spec:
             -   name: vpn
                 env:
                     {{ $.Values.gluetun.env | toYaml | nindent 25 }}
+                envFrom:
+                    {{ $.Values.gluetun.envFrom | toYaml | nindent 25 }}
                 image: {{ $.Values.gluetun.image }}
                 imagePullPolicy: IfNotPresent
                 ports:
