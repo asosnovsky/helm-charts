@@ -23,6 +23,8 @@ spec:
             labels:
                 {{ $labels | toYaml | nindent 16 }}
         spec:
+            volumes:
+                {{ $.Values.volumes | toYaml | nindent 25 }}
             containers:
                 -   name: main
                     env:
@@ -31,6 +33,8 @@ spec:
                     imagePullPolicy: Always
                     resources: 
                         {{ $.Values.transmission.resources | toYaml | nindent 25 }}
+                    volumeMounts:
+                        {{ $.Values.transmission.volumeMounts | toYaml | nindent 25 }}
             initContainers:
                 -   name: vpn
                     env:

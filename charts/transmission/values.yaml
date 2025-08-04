@@ -1,12 +1,14 @@
 
+volumes: []
+
 transmission:
   image: linuxserver/transmission
   env: 
     PUID: "1000"
     PGID: "100"
     TZ: Etc/UTC
-  volumes: []
   resources: {}
+  volumeMounts: []
 
 gluetun:
   image: qmcgaw/gluetun:v3
