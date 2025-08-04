@@ -14,8 +14,8 @@ spec:
     replicas: 1
     revisionHistoryLimit: 4
     selector:
-    matchLabels:
-        {{ $labels | toYaml | nindent 8 }}
+        matchLabels:
+            {{ $labels | toYaml | nindent 12 }}
     strategy:
         type: Recreate
     restartPolicy: Always
