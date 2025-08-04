@@ -29,3 +29,7 @@ data:
         cpu: true
         memory: true
         network: default
+  bookmarks.yaml: ""
+  services.yaml: ""
+  custom.css: ""
+  custom.js: ""
