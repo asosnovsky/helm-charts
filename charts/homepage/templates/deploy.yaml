@@ -28,6 +28,12 @@ spec:
             automountServiceAccountToken: true
             dnsPolicy: ClusterFirst
             enableServiceLinks: true
+            volumes:
+                -   name: homepage-config
+                    configMap:
+                        name: homepage
+                -   name: logs
+                    emptyDir: {}
             containers:
                 -   name: homepage
                     image: "{{ .Values.image }}"
@@ -39,6 +45,11 @@ spec:
                         -   name: http
                             containerPort: 3000
                             protocol: TCP
+                    volumeMounts:
+                        -   mountPath: /app/config/logs
+                            name: logs
+                        -   mountPath: /app/config
+                            name: homepage-config
 ---
 kind: Service
 apiVersion: v1
