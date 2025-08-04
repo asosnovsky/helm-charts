@@ -48,8 +48,16 @@ spec:
                     volumeMounts:
                         -   mountPath: /app/config/logs
                             name: logs
-                        -   mountPath: /app/config
-                            name: homepage-config
+                        -   mountPath: /app/config/kubernetes.yaml
+                            name: homepage-config              
+                            subPath: kubernetes.yaml
+                        -   mountPath: /app/config/settings.yaml
+                            name: homepage-config              
+                            subPath: settings.yaml
+                        -   mountPath: /app/config/widgets.yaml
+                            name: homepage-config              
+                            subPath: widgets.yaml
+
 ---
 kind: Service
 apiVersion: v1
