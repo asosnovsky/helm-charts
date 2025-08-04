@@ -1,0 +1,3 @@
+{{ if .Values.ingress.enabled }}
+{{ include "homelab.ingress" (merge .Values.ingress (dict "global" $.Values.global "namespace" $.Release.Namespace)) }}
+{{ end }}
