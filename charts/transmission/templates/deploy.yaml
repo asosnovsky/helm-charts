@@ -18,7 +18,6 @@ spec:
             {{ $labels | toYaml | nindent 12 }}
     strategy:
         type: Recreate
-    restartPolicy: Always
     template:
         metadata:
             labels:
