@@ -2,19 +2,20 @@
 transmission:
   image: linuxserver/transmission
   env: 
-    - name: PUID
-      value: "1000"
-    - name: PGID
-      value: "100"
-    - name: TZ
-      value: Etc/UTC
+    PUID: "1000"
+    PGID: "100"
+    TZ: Etc/UTC
   volumes: []
   resources: {}
 
 gluetun:
   image: qmcgaw/gluetun:v3
   resources: {}
-  env: []
+  env: 
+    HEALTH_VPN_DURATION_INITIAL: 120s
+    BLOCK_MALICIOUS: "off"
+    DNS_KEEP_NAMESERVER: "on"
+    FIREWALL_OUTBOUND_SUBNETS: 10.42.0.0/15
   envFrom: []
 
 busybox:
