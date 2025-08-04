@@ -1,0 +1,74 @@
+{{ $labels := (dict
+    "app.kubernetes.io/name" .Chart.Name
+    "app.kubernetes.io/instance" .Release.Name
+    "app.kubernetes.io/part-of" .Release.Namespace
+) }}
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}
+  name: {{ .Release.Namespace }}
+spec:
+    replicas: 1
+    revisionHistoryLimit: 4
+    selector:
+    matchLabels:
+        {{ $labels | toYaml | nindent 8 }}
+    strategy:
+        type: Recreate
+    restartPolicy: Always
+    template:
+        metadata:
+            labels:
+                {{ $labels | toYaml | nindent 16 }}
+        spec:
+            containers:
+                -   name: main
+                    env:
+                        {{ $.Values.transmission.env | toYaml | nindent 25 }}
+                    image: "{{ $.Values.transmission.image }}"
+                    imagePullPolicy: Always
+                    resources: 
+                        {{ $.Values.transmission.resources | toYaml | nindent 25 }}
+        initContainers:
+            -   name: vpn
+                env:
+                    {{ $.Values.gluetun.env | toYaml | nindent 25 }}
+                image: {{ $.Values.gluetun.image }}
+                imagePullPolicy: IfNotPresent
+                ports:
+                    -   containerPort: 9091
+                        protocol: TCP
+                        name: http-tcp
+                    -   containerPort: 9091
+                        protocol: UDP
+                        name: http-udp
+                    -   containerPort: 51413
+                        protocol: TCP
+                        name: torrent-tcp
+                    -   containerPort: 51413
+                        protocol: UDP
+                        name: torrent-udp
+                resources: 
+                    {{ $.Values.gluetun.resources | toYaml | nindent 25 }}
+                restartPolicy: Always
+                securityContext:
+                    capabilities:
+                        add:
+                            - NET_ADMIN
+            -   name: ping
+                image: {{ $.Values.busybox.image }}
+                imagePullPolicy: IfNotPresent
+                resources: 
+                    {{ $.Values.busybox.resources | toYaml | nindent 25 }}
+                command:
+                    - sh
+                    - -c
+                    - |
+                        while ! ping -c 1 8.8.8.8; do
+                        echo "Ping failed, retrying in 5"
+                        sleep 5
+                        done
+                        echo "ping succesfull, exiting"

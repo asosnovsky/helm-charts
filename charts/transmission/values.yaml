@@ -1,0 +1,23 @@
+
+transmission:
+  image: linuxserver/transmission
+  env: 
+    - name: PUID
+      value: "1000"
+    - name: PGID
+      value: "100"
+    - name: TZ
+      value: Etc/UTC
+  volumes: []
+  resources: {}
+
+gluetun:
+  image: qmcgaw/gluetun:v3
+  resources: {}
+  env: []
+  envFrom: []
+
+busybox:
+  image: busybox
+  resources: {}
+

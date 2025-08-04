@@ -1,6 +1,7 @@
 apiVersion: v2
-name: immich
-description: An apps service for homelab
+name: compose-app
+description: | 
+    A simple helm chart that takes a compose-like YAML file format and deploys it to a Kubernetes cluster.
 type: application
 version: 0.1.0
 dependencies: []
