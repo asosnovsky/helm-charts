@@ -1,0 +1,2 @@
+image: "ghcr.io/gethomepage/homepage:latest"
+allowedHosts: "gethomepage.dev" 

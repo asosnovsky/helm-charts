@@ -1,0 +1,57 @@
+{{ $labels := (dict
+    "app.kubernetes.io/name" .Chart.Name
+    "app.kubernetes.io/instance" .Release.Name
+    "app.kubernetes.io/part-of" .Release.Namespace
+) }}
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: homepage
+    namespace: {{ .Release.Namespace}}
+spec:
+    revisionHistoryLimit: 4
+    replicas: 1
+    strategy:
+        type: RollingUpdate
+    selector:
+        matchLabels:
+            {{ $labels | toYaml | nindent 12 }}
+
+    template:
+        metadata:
+            labels:
+                {{ $labels | toYaml | nindent 16 }}
+        spec:
+            serviceAccountName: homepage
+            automountServiceAccountToken: true
+            dnsPolicy: ClusterFirst
+            enableServiceLinks: true
+            containers:
+                -   name: homepage
+                    image: "{{ .Values.image }}"
+                    imagePullPolicy: Always
+                    env:
+                        -   name: HOMEPAGE_ALLOWED_HOSTS
+                            value: "{{ .Values.allowedHosts }}"
+                ports:
+                    -   name: http
+                        containerPort: 3000
+                        protocol: TCP
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: homepage
+  annotations:
+    {{ (.serviceAnnotations | default dict) | toYaml | nindent 4 }}
+spec:
+    selector:
+        {{ $labels | toYaml | nindent 8 }}
+    type: {{ $.Values.serviceType | default "ClusterIP" | quote }}
+    ports:
+        -   targetPort: 3000
+            port: 80
+            protocol: TCP
+            name: http
