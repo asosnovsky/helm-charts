@@ -20,10 +20,10 @@ spec:
         type: Recreate
     restartPolicy: Always
     template:
-        metadata:
-            labels:
-                {{ $labels | toYaml | nindent 16 }}
         spec:
+            metadata:
+                labels:
+                    {{ $labels | toYaml | nindent 26 }}
             containers:
                 -   name: main
                     env:
@@ -32,45 +32,45 @@ spec:
                     imagePullPolicy: Always
                     resources: 
                         {{ $.Values.transmission.resources | toYaml | nindent 25 }}
-        initContainers:
-            -   name: vpn
-                env:
-                    {{ include "envs" $.Values.gluetun.env | nindent 25 }}
-                envFrom:
-                    {{ $.Values.gluetun.envFrom | toYaml | nindent 25 }}
-                image: {{ $.Values.gluetun.image }}
-                imagePullPolicy: IfNotPresent
-                ports:
-                    -   containerPort: 9091
-                        protocol: TCP
-                        name: http-tcp
-                    -   containerPort: 9091
-                        protocol: UDP
-                        name: http-udp
-                    -   containerPort: 51413
-                        protocol: TCP
-                        name: torrent-tcp
-                    -   containerPort: 51413
-                        protocol: UDP
-                        name: torrent-udp
-                resources: 
-                    {{ $.Values.gluetun.resources | toYaml | nindent 25 }}
-                restartPolicy: Always
-                securityContext:
-                    capabilities:
-                        add:
-                            - NET_ADMIN
-            -   name: ping
-                image: {{ $.Values.busybox.image }}
-                imagePullPolicy: IfNotPresent
-                resources: 
-                    {{ $.Values.busybox.resources | toYaml | nindent 25 }}
-                command:
-                    - sh
-                    - -c
-                    - |
-                        while ! ping -c 1 8.8.8.8; do
-                        echo "Ping failed, retrying in 5"
-                        sleep 5
-                        done
-                        echo "ping succesfull, exiting"
+            initContainers:
+                -   name: vpn
+                    env:
+                        {{ include "envs" $.Values.gluetun.env | nindent 25 }}
+                    envFrom:
+                        {{ $.Values.gluetun.envFrom | toYaml | nindent 25 }}
+                    image: {{ $.Values.gluetun.image }}
+                    imagePullPolicy: IfNotPresent
+                    ports:
+                        -   containerPort: 9091
+                            protocol: TCP
+                            name: http-tcp
+                        -   containerPort: 9091
+                            protocol: UDP
+                            name: http-udp
+                        -   containerPort: 51413
+                            protocol: TCP
+                            name: torrent-tcp
+                        -   containerPort: 51413
+                            protocol: UDP
+                            name: torrent-udp
+                    resources: 
+                        {{ $.Values.gluetun.resources | toYaml | nindent 25 }}
+                    restartPolicy: Always
+                    securityContext:
+                        capabilities:
+                            add:
+                                - NET_ADMIN
+                -   name: ping
+                    image: {{ $.Values.busybox.image }}
+                    imagePullPolicy: IfNotPresent
+                    resources: 
+                        {{ $.Values.busybox.resources | toYaml | nindent 25 }}
+                    command:
+                        - sh
+                        - -c
+                        - |
+                            while ! ping -c 1 8.8.8.8; do
+                            echo "Ping failed, retrying in 5"
+                            sleep 5
+                            done
+                            echo "ping succesfull, exiting"
