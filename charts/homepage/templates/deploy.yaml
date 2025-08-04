@@ -35,10 +35,10 @@ spec:
                     env:
                         -   name: HOMEPAGE_ALLOWED_HOSTS
                             value: "{{ .Values.allowedHosts }}"
-                ports:
-                    -   name: http
-                        containerPort: 3000
-                        protocol: TCP
+                    ports:
+                        -   name: http
+                            containerPort: 3000
+                            protocol: TCP
 ---
 kind: Service
 apiVersion: v1
