@@ -44,7 +44,7 @@ spec:
                             value: "{{ $.Values.qbittorrent.ports.webui }}"
                         -   name: TORRENTING_PORT
                             value: "{{ $.Values.qbittorrent.ports.torrenting }}"
-                        {{ include "envs" $.Values.qbittorrent.env | nindent 25 }}
+                        {{ include "envs" $.Values.qbittorrent.env | nindent 24 }}
                     image: "{{ $.Values.qbittorrent.image }}"
                     imagePullPolicy: Always
                     resources: 
