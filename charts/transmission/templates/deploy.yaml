@@ -26,7 +26,8 @@ spec:
             volumes:
                 {{ $.Values.volumes | toYaml | nindent 25 }}
             containers:
-                -   name: main
+                {{ if $.Values.transmission.enabled }}
+                -   name: transmission
                     env:
                         {{ include "envs" $.Values.transmission.env | nindent 25 }}
                     image: "{{ $.Values.transmission.image }}"
@@ -35,6 +36,22 @@ spec:
                         {{ $.Values.transmission.resources | toYaml | nindent 25 }}
                     volumeMounts:
                         {{ $.Values.transmission.volumeMounts | toYaml | nindent 25 }}
+                {{ end }}
+                {{ if $.Values.qbittorrent.enabled }}
+                -   name: qbittorrent
+                    env:
+                        -   name: WEBUI_PORT
+                            value: "{{ $.Values.qbittorrent.ports.webui }}"
+                        -   name: TORRENTING_PORT
+                            value: "{{ $.Values.qbittorrent.ports.torrenting }}"
+                        {{ include "envs" $.Values.qbittorrent.env | nindent 25 }}
+                    image: "{{ $.Values.qbittorrent.image }}"
+                    imagePullPolicy: Always
+                    resources: 
+                        {{ $.Values.qbittorrent.resources | toYaml | nindent 25 }}
+                    volumeMounts:
+                        {{ $.Values.qbittorrent.volumeMounts | toYaml | nindent 25 }}
+                {{ end }}
             initContainers:
                 -   name: vpn
                     env:
@@ -44,18 +61,34 @@ spec:
                     image: {{ $.Values.gluetun.image }}
                     imagePullPolicy: IfNotPresent
                     ports:
+                        {{ if $.Values.transmission.enabled }}
                         -   containerPort: 9091
                             protocol: TCP
-                            name: http-tcp
+                            name: t-webui-tcp
                         -   containerPort: 9091
                             protocol: UDP
-                            name: http-udp
+                            name: t-webui-udp
                         -   containerPort: 51413
                             protocol: TCP
-                            name: torrent-tcp
+                            name: t-torrent-tcp
                         -   containerPort: 51413
                             protocol: UDP
-                            name: torrent-udp
+                            name: t-torrent-udp
+                        {{ end }}
+                        {{ if $.Values.qbittorrent.enabled }}
+                        -   containerPort: {{ $.Values.qbittorrent.ports.webui }}
+                            protocol: TCP
+                            name: q-webui-tcp
+                        -   containerPort: {{ $.Values.qbittorrent.ports.webui }}
+                            protocol: UDP
+                            name: q-webui-udp
+                        -   containerPort: {{ $.Values.qbittorrent.ports.torrenting }}
+                            protocol: TCP
+                            name: q-torrent-tcp
+                        -   containerPort: {{ $.Values.qbittorrent.ports.torrenting }}
+                            protocol: UDP
+                            name: q-torrent-udp
+                        {{ end }}
                     resources: 
                         {{ $.Values.gluetun.resources | toYaml | nindent 25 }}
                     restartPolicy: Always
@@ -81,7 +114,7 @@ spec:
 kind: Service
 apiVersion: v1
 metadata:
-  name: transmission
+  name: torrents
   annotations:
     {{ (.serviceAnnotations | default dict) | toYaml | nindent 4 }}
 spec:
@@ -89,19 +122,39 @@ spec:
         {{ $labels | toYaml | nindent 8 }}
     type: {{ $.Values.serviceType | default "ClusterIP" | quote }}
     ports:
+        {{ if $.Values.transmission.enabled }}
         -   targetPort: 9091
             port: 9091
             protocol: TCP
-            name: http-tcp
+            name: t-webui-tcp
         -   targetPort: 9091
             port: 9091
             protocol: UDP
-            name: http-udp
+            name: t-webui-udp
         -   targetPort: 51413
             port: 51413
             protocol: TCP
-            name: torrent-tcp
+            name: t-torrent-tcp
         -   targetPort: 51413
             port: 51413
             protocol: UDP
-            name: torrent-udp
+            name: t-torrent-udp
+        {{ end }}
+        {{ if $.Values.qbittorrent.enabled }}
+        -   targetPort: {{ $.Values.qbittorrent.ports.webui }}
+            port: {{ $.Values.qbittorrent.ports.webui }}
+            protocol: TCP
+            name: q-webui-tcp
+        -   targetPort: {{ $.Values.qbittorrent.ports.webui }}
+            port: {{ $.Values.qbittorrent.ports.webui }}
+            protocol: UDP
+            name: q-webui-udp
+        -   targetPort: {{ $.Values.qbittorrent.ports.torrenting }}
+            port: {{ $.Values.qbittorrent.ports.torrenting }}
+            protocol: TCP
+            name: q-torrent-tcp
+        -   targetPort: {{ $.Values.qbittorrent.ports.torrenting }}
+            port: {{ $.Values.qbittorrent.ports.torrenting }}
+            protocol: UDP
+            name: q-torrent-udp
+        {{ end }}

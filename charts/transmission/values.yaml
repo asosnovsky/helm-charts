@@ -2,6 +2,7 @@
 volumes: []
 
 transmission:
+  enabled: true
   image: linuxserver/transmission
   env: 
     PUID: "1000"
@@ -9,6 +10,17 @@ transmission:
     TZ: Etc/UTC
   resources: {}
   volumeMounts: []
+
+qbittorrent:
+  enabled: true
+  image: lscr.io/linuxserver/qbittorrent:latest
+  ports:
+    webui: 3000
+    torrenting: 6881
+  env: 
+    PUID: "1000"
+    PGID: "100"
+    TZ: Etc/UTC
 
 gluetun:
   image: qmcgaw/gluetun:v3
