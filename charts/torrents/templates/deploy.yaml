@@ -137,16 +137,16 @@ spec:
                         capabilities:
                             add:
                                 - NET_ADMIN
-                    readinessProbe:
-                        exec:
-                            command:
-                            - sh
-                            - -c
-                            - "ping -c 1 www.google.com || exit 1"
-                        initialDelaySeconds: 20     
-                        periodSeconds: 60           
-                        failureThreshold: 3         
-                        timeoutSeconds: 10
+                    # readinessProbe:
+                    #     exec:
+                    #         command:
+                    #         - sh
+                    #         - -c
+                    #         - "ping -c 1 www.google.com || exit 1"
+                    #     initialDelaySeconds: 20     
+                    #     periodSeconds: 60           
+                    #     failureThreshold: 3         
+                    #     timeoutSeconds: 10
                 -   name: ping
                     image: {{ $.Values.busybox.image }}
                     imagePullPolicy: IfNotPresent
