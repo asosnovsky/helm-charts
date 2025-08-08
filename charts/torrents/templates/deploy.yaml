@@ -36,26 +36,26 @@ spec:
                         {{ $.Values.transmission.resources | toYaml | nindent 25 }}
                     volumeMounts:
                         {{ $.Values.transmission.volumeMounts | toYaml | nindent 25 }}
-                    livenessProbe:
-                        exec:
-                            command:
-                            - sh
-                            - -c
-                            - "ping -c 1 www.google.com || exit 1"
-                        initialDelaySeconds: 20     
-                        periodSeconds: 60           
-                        failureThreshold: 3         
-                        timeoutSeconds: 10
-                    readinessProbe:
-                        exec:
-                            command:
-                            - sh
-                            - -c
-                            - "ping -c 1 www.google.com || exit 1"
-                        initialDelaySeconds: 20     
-                        periodSeconds: 60           
-                        failureThreshold: 3         
-                        timeoutSeconds: 10
+                    # livenessProbe:
+                    #     exec:
+                    #         command:
+                    #         - sh
+                    #         - -c
+                    #         - "ping -c 1 www.google.com || exit 1"
+                    #     initialDelaySeconds: 20     
+                    #     periodSeconds: 60           
+                    #     failureThreshold: 3         
+                    #     timeoutSeconds: 10
+                    # readinessProbe:
+                    #     exec:
+                    #         command:
+                    #         - sh
+                    #         - -c
+                    #         - "ping -c 1 www.google.com || exit 1"
+                    #     initialDelaySeconds: 20     
+                    #     periodSeconds: 60           
+                    #     failureThreshold: 3         
+                    #     timeoutSeconds: 10
                 {{ end }}
                 {{ if $.Values.qbittorrent.enabled }}
                 -   name: qbittorrent
@@ -71,26 +71,26 @@ spec:
                         {{ $.Values.qbittorrent.resources | toYaml | nindent 25 }}
                     volumeMounts:
                         {{ $.Values.qbittorrent.volumeMounts | toYaml | nindent 25 }}
-                    livenessProbe:
-                        exec:
-                            command:
-                            - sh
-                            - -c
-                            - "ping -c 1 www.google.com || exit 1"
-                        initialDelaySeconds: 20     
-                        periodSeconds: 60           
-                        failureThreshold: 3         
-                        timeoutSeconds: 10
-                    readinessProbe:
-                        exec:
-                            command:
-                            - sh
-                            - -c
-                            - "ping -c 1 www.google.com || exit 1"
-                        initialDelaySeconds: 20     
-                        periodSeconds: 60           
-                        failureThreshold: 3         
-                        timeoutSeconds: 10
+                    # livenessProbe:
+                    #     exec:
+                    #         command:
+                    #         - sh
+                    #         - -c
+                    #         - "ping -c 1 www.google.com || exit 1"
+                    #     initialDelaySeconds: 20     
+                    #     periodSeconds: 60           
+                    #     failureThreshold: 3         
+                    #     timeoutSeconds: 10
+                    # readinessProbe:
+                    #     exec:
+                    #         command:
+                    #         - sh
+                    #         - -c
+                    #         - "ping -c 1 www.google.com || exit 1"
+                    #     initialDelaySeconds: 20     
+                    #     periodSeconds: 60           
+                    #     failureThreshold: 3         
+                    #     timeoutSeconds: 10
 
                 {{ end }}
             initContainers:
