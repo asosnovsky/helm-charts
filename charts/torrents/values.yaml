@@ -1,10 +1,9 @@
-
 volumes: []
 
 transmission:
   enabled: true
   image: linuxserver/transmission
-  env: 
+  env:
     PUID: "1000"
     PGID: "100"
     TZ: Etc/UTC
@@ -17,7 +16,7 @@ qbittorrent:
   ports:
     webui: 3000
     torrenting: 6881
-  env: 
+  env:
     PUID: "1000"
     PGID: "100"
     TZ: Etc/UTC
@@ -25,7 +24,7 @@ qbittorrent:
 gluetun:
   image: qmcgaw/gluetun:v3
   resources: {}
-  env: 
+  env:
     HEALTH_VPN_DURATION_INITIAL: 120s
     BLOCK_MALICIOUS: "off"
     DNS_KEEP_NAMESERVER: "on"
@@ -35,4 +34,3 @@ gluetun:
 busybox:
   image: busybox
   resources: {}
-
