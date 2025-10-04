@@ -1,6 +1,6 @@
 global:
   dns:
-    internalPrefix: k3s.local
+    internalPrefix: k3s.internal
     primary:
       domain: "bob.cat"
       root: ""
@@ -24,4 +24,3 @@ externalSecrets:
   secrets: {}
 
 ingress: {}
-
